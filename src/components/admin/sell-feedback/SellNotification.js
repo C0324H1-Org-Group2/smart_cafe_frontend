@@ -124,11 +124,15 @@ const SellNotification = ({onSellNotifications, isDropdownOpen, closeDropdown}) 
                 <Link
                     className="dropdown-item"
                     key={msg.tableId}
-                    to={`/admin/sell`}
+                    to={msg.isOnline || msg.tableId === -1 ? `/admin/order-list` : `/admin/sell`}
                     onClick={() => handleNotificationClick(msg.tableId, 'order')}
                     style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}
                 >
-                    <strong>Table {msg.code} calling the dish</strong>
+                    <strong>
+                        {msg.isOnline || msg.tableId === -1 
+                            ? `Có đơn hàng Online mới: ${msg.code}` 
+                            : `Table ${msg.code} calling the dish`}
+                    </strong>
                 </Link>
             ))}
             {messagesEmployee.length > 0 && messagesEmployee.map((msg) => (

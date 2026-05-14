@@ -9,7 +9,7 @@ const Sidebar = () => {
         <div className="main-sidebar sidebar-style-2">
             <aside id="sidebar-wrapper">
                 <div className="sidebar-brand">
-                    <NavLink to="/admin/home">Smart Cafe</NavLink>
+                    <NavLink to="/admin/home">Hương Coffee</NavLink>
                 </div>
                 <div className="sidebar-brand sidebar-brand-sm">
                     <NavLink to="/admin/home">Sc</NavLink>

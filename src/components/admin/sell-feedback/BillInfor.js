@@ -22,7 +22,7 @@ function BillInfor({ bills, nameEmployee }) {
 
     return (
         <div className="receipt" style={{ width: "auto", margin: "0 auto" }}>
-            <h3 className="text-center">Smart Cafe</h3>
+            <h3 className="text-center">Hương Coffee</h3>
             <h4 className="text-center">PAYMENT INVOICE</h4>
 
             <div className="receipt-info">

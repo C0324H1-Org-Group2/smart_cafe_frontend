@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Row, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import QuantityModal from './QuantityModal'; // Import modal
+import { useCart } from '../../../context/CartContext';
+import { toast } from 'react-toastify';
 
 const ListServiceByType = ({ services, handleAddToCart, currentPage, setCurrentPage, isTransitioning, setIsTransitioning, itemsPerPage, rangeValue }) => {
     const [showModal, setShowModal] = useState(false);
     const [selectedService, setSelectedService] = useState(null);
-    const [quantity, setQuantity] = useState(1); // Thêm state để lưu số lượng
+    const [quantity, setQuantity] = useState(1);
+    const { addToCart } = useCart();
 
     // Lọc dịch vụ theo giá
     const filteredServices = services.filter(service => service.price <= rangeValue);
@@ -55,8 +58,10 @@ const ListServiceByType = ({ services, handleAddToCart, currentPage, setCurrentP
     };
 
     const handleConfirmModal = (quantity) => {
-        handleAddToCart(selectedService, quantity); // Gửi số lượng về component cha
-        handleCloseModal(); // Đóng modal và reset số lượng
+        handleAddToCart(selectedService, quantity); // For dine-in ordering
+        addToCart(selectedService, quantity);        // For online cart (VNPay)
+        toast.success(`Đã thêm "${selectedService.serviceName}" vào giỏ hàng!`, { autoClose: 2000 });
+        handleCloseModal();
     };
 
     const renderTooltip = (description) => (

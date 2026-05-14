@@ -154,6 +154,16 @@ export const callEmployee = async (id) => {
     }
 }
 
+export const createVNPayPaymentUrl = async (paymentData) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/payment/create`, paymentData);
+        return response.data; // { paymentUrl, txnRef }
+    } catch (error) {
+        console.error('Error creating VNPay payment URL:', error);
+        throw error;
+    }
+};
+
 
 
 

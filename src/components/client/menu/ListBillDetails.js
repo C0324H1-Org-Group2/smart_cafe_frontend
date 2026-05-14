@@ -178,7 +178,6 @@ const ListBillDetails = ({ cartItems, handleStatusChange, handleQuantityChange, 
     };
 
     const handlePay = async () => {
-
         const isBill = await serviceService.checkIsBillTable(selectedTable.tableId)
 
         if (isBill) {

@@ -37,9 +37,13 @@ const NewsListManagement = () => {
     useEffect(() => {
         const fetchUserRole = () => {
             const authorities = JSON.parse(localStorage.getItem('authorities'));
-            if (authorities) {
-                const role = authorities[0].authority;
-                setUserRole(role);
+            if (authorities && Array.isArray(authorities)) {
+                const roles = authorities.map(auth => auth.authority);
+                if (roles.includes('ROLE_ADMIN')) {
+                    setUserRole('ROLE_ADMIN');
+                } else if (roles.includes('ROLE_EMPLOYEE')) {
+                    setUserRole('ROLE_EMPLOYEE');
+                }
             }
         };
 

@@ -13,7 +13,10 @@ import Menu from "./components/client/menu/Menu";
 import NewsList from "./components/client/news/NewsList";
 import NewsDetail from "./components/client/news/NewsDetail";
 import Feedback from "./components/client/menu/Feedback";
-
+// Cart & Payment
+import CartPage from "./components/client/cart/CartPage";
+import VNPayReturn from "./components/client/cart/VNPayReturn";
+import { CartProvider } from "./context/CartContext";
 // Admin Components
 import AdminLayout from "./components/admin/AdminLayout";
 import Sidebar from "./components/admin/common/Sidebar";
@@ -51,13 +54,13 @@ import {AdminRoute} from "./components/admin/common/AdminRoute";
 import {hasRole, isLoggedIn} from "./components/admin/manager/HasRole";
 import Forbidden403 from "./components/admin/manager/403";
 
-
 function App() {
     return (
+        <CartProvider>
         <>
         <BrowserRouter>
             <Routes>
-                {/* Các route cho Client */}
+                {/* === CLIENT ROUTES === */}
                 <Route path="/" element={
                     <>
                         <Helmet>
@@ -147,8 +150,31 @@ function App() {
                         </ClientLayout>
                     </>
                 }/>
+                {/* Cart & VNPay routes */}
+                <Route path="/cart" element={
+                    <>
+                        <Helmet>
+                            <link rel="stylesheet" href="/css/icomoon.css"/>
+                            <link rel="stylesheet" href="/css/style.css"/>
+                        </Helmet>
+                        <ClientLayout>
+                            <CartPage/>
+                        </ClientLayout>
+                    </>
+                }/>
+                <Route path="/vnpay-return" element={
+                    <>
+                        <Helmet>
+                            <link rel="stylesheet" href="/css/icomoon.css"/>
+                            <link rel="stylesheet" href="/css/style.css"/>
+                        </Helmet>
+                        <ClientLayout>
+                            <VNPayReturn/>
+                        </ClientLayout>
+                    </>
+                }/>
 
-                    {/* Route cho Admin */}
+                    {/* === ADMIN ROUTES === */}
                     <Route path="/admin/home" element={
                         isLoggedIn() ? (
                             hasRole('ROLE_ADMIN') ? (   // Kiểm tra quyền ROLE_ADMIN
@@ -633,6 +659,7 @@ function App() {
         </BrowserRouter>
         <ToastContainer/>
         </>
+        </CartProvider>
     );
 }
 
