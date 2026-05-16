@@ -8,7 +8,9 @@ const ClientLayout = ({ children }) => {
 
     useEffect(() => {
         const username = localStorage.getItem('clientUsername');
-        if (!username) {
+        const isResetPasswordPage = window.location.pathname === '/reset-password';
+
+        if (!username && !isResetPasswordPage) {
             setShowForcedAuth(true);
         }
     }, []);

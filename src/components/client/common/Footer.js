@@ -42,8 +42,8 @@ const Footer = () => {
                             <h2 className="ftco-heading-2">Have a Questions?</h2>
                             <div className="block-23 mb-3">
                                 <ul>
-                                    <li><span className="icon icon-map-marker"></span><span className="text">Lô TT23, CodeGym, Hà Nội, Việt Nam</span></li>
-                                    <li><a href="#"><span className="icon icon-phone"></span><span className="text">+84 832 363 40</span></a></li>
+                                    <li><span className="icon icon-map-marker"></span><span className="text">Hà Nội, Việt Nam</span></li>
+                                    <li><a href="#"><span className="icon icon-phone"></span><span className="text">+84 123456789</span></a></li>
                                     <li><a href="#"><span className="icon icon-envelope"></span><span className="text">mutdshop@gmail.com</span></a></li>
                                 </ul>
                             </div>

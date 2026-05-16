@@ -16,6 +16,7 @@ import Feedback from "./components/client/menu/Feedback";
 // Cart & Payment
 import CartPage from "./components/client/cart/CartPage";
 import VNPayReturn from "./components/client/cart/VNPayReturn";
+import ClientResetPassword from "./components/client/cart/ResetPassword";
 import { CartProvider } from "./context/CartContext";
 // Admin Components
 import AdminLayout from "./components/admin/AdminLayout";
@@ -171,6 +172,17 @@ function App() {
                         </Helmet>
                         <ClientLayout>
                             <VNPayReturn/>
+                        </ClientLayout>
+                    </>
+                }/>
+                <Route path="/reset-password" element={
+                    <>
+                        <Helmet>
+                            <link rel="stylesheet" href="/css/icomoon.css"/>
+                            <link rel="stylesheet" href="/css/style.css"/>
+                        </Helmet>
+                        <ClientLayout>
+                            <ClientResetPassword/>
                         </ClientLayout>
                     </>
                 }/>
