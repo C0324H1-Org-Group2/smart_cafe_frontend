@@ -18,6 +18,7 @@ function OrderList() {
     const [searchParams, setSearchParams] = useState({ codeSearch: '', dateSearch: '' });
     const [showModal, setShowModal] = useState(false);
     const [selectedOrderId, setSelectedOrderId] = useState(null);
+    const [selectedOrder, setSelectedOrder] = useState(null);
     const [orderDetails, setOrderDetails] = useState([]);
     const [isAscending, setIsAscending] = useState(true);
     const [userRole, setUserRole] = useState('ROLE_EMPLOYEE');
@@ -78,10 +79,11 @@ function OrderList() {
         setPage(0);
     };
 
-    const handleShowModal = async (orderId) => {
-        setSelectedOrderId(orderId);
+    const handleShowModal = async (order) => {
+        setSelectedOrderId(order.billCode);
+        setSelectedOrder(order);
         try {
-            const details = await getOrderDetails(orderId);
+            const details = await getOrderDetails(order.billCode);
             setOrderDetails(details);
             setShowModal(true);
         } catch (error) {
@@ -92,17 +94,20 @@ function OrderList() {
     const handleCloseModal = () => {
         setShowModal(false);
         setSelectedOrderId(null);
+        setSelectedOrder(null);
         setOrderDetails([]);
     };
 
     // Auto open modal if navigated from notification
     useEffect(() => {
-        if (location.state && location.state.openOrderCode) {
-            handleShowModal(location.state.openOrderCode);
+        if (location.state && location.state.openOrderCode && orders.length > 0) {
+            const billCode = location.state.openOrderCode;
+            const foundOrder = orders.find(o => o.billCode === billCode);
+            handleShowModal(foundOrder || { billCode: billCode });
             // Clear the state so it doesn't keep opening if user refreshes
             navigate(location.pathname, { replace: true });
         }
-    }, [location.state, navigate]);
+    }, [location.state, navigate, orders]);
 
     return (
         <>
@@ -177,7 +182,7 @@ function OrderList() {
                                             <td>
                                                 <button
                                                     className="btn btn-secondary"
-                                                    onClick={() => handleShowModal(order.billCode)}
+                                                    onClick={() => handleShowModal(order)}
                                                     style={{backgroundColor: 'transparent', border: 'none'}}
                                                 >
                                                     <i className="fas fa-eye eye-icon"></i>
@@ -228,6 +233,7 @@ function OrderList() {
                 show={showModal}
                 handleClose={handleCloseModal}
                 orderDetails={orderDetails}
+                orderInfo={selectedOrder}
             />
         </>
     );

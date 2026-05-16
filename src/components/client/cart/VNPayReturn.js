@@ -22,10 +22,15 @@ const VNPayReturn = () => {
         const confirmOrder = async () => {
             if (isSuccess) {
                 const pendingCart = JSON.parse(sessionStorage.getItem('pendingCart') || '[]');
+                const checkoutData = JSON.parse(sessionStorage.getItem('checkoutData') || '{}');
                 if (pendingCart.length > 0) {
                     setIsSaving(true);
                     try {
-                        await axios.post('http://localhost:8080/api/client/payment/confirm-order', pendingCart, {
+                        const payload = {
+                            cartItems: pendingCart,
+                            customerInfo: checkoutData
+                        };
+                        await axios.post('http://localhost:8080/api/client/payment/confirm-order', payload, {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem('token')}`
                             }
@@ -33,6 +38,7 @@ const VNPayReturn = () => {
                         // Clear the online cart on successful payment and save
                         clearCart();
                         sessionStorage.removeItem('pendingCart');
+                        sessionStorage.removeItem('checkoutData');
                     } catch (err) {
                         console.error('Lỗi lưu đơn hàng:', err);
                         setSaveError('Thanh toán thành công nhưng có lỗi khi lưu đơn hàng vào hệ thống. Vui lòng liên hệ quán.');

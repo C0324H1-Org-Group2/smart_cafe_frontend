@@ -59,8 +59,9 @@ const CartPage = () => {
             );
             const { paymentUrl } = res.data;
             if (paymentUrl) {
-                // Save cart to sessionStorage before redirect so we can clear after return
+                // Save cart and checkout data to sessionStorage before redirect
                 sessionStorage.setItem('pendingCart', JSON.stringify(cartItems));
+                sessionStorage.setItem('checkoutData', JSON.stringify(details));
                 window.location.href = paymentUrl;
             } else {
                 toast.error('Không thể tạo liên kết thanh toán');
