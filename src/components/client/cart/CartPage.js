@@ -9,8 +9,14 @@ import { toast } from 'react-toastify';
 const CartPage = () => {
     const { cartItems, removeFromCart, updateQuantity, clearCart, totalItems, totalAmount } = useCart();
     const [showAuthModal, setShowAuthModal] = useState(false);
+    const [showCheckoutForm, setShowCheckoutForm] = useState(false);
+    const [checkoutData, setCheckoutData] = useState({ fullName: '', phone: '', address: '' });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const removeAccents = (str) => {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+    };
 
     const isLoggedIn = () => !!localStorage.getItem('token');
 
@@ -26,13 +32,18 @@ const CartPage = () => {
             setShowAuthModal(true);
             return;
         }
-        initiateVNPay();
+        
+        // Populate default name if available
+        const savedName = localStorage.getItem('employeeName') || localStorage.getItem('clientUsername') || '';
+        setCheckoutData(prev => ({ ...prev, fullName: prev.fullName || savedName }));
+        setShowCheckoutForm(true);
     };
 
-    const initiateVNPay = async () => {
+    const initiateVNPay = async (details = checkoutData) => {
         setLoading(true);
         try {
-            const orderInfo = `Thanh toan ${cartItems.length} mon - Hương Coffee`;
+            const rawOrderInfo = `Thanh toan ${cartItems.length} mon. Khach: ${details.fullName}. SDT: ${details.phone}`;
+            const orderInfo = removeAccents(rawOrderInfo).substring(0, 200); // Limit length just in case
             const res = await axios.post(
                 'http://localhost:8080/api/client/payment/create',
                 {
@@ -65,7 +76,17 @@ const CartPage = () => {
     const handleAuthSuccess = () => {
         setShowAuthModal(false);
         toast.success(`Xin chào, ${localStorage.getItem('clientUsername') || 'bạn'}!`);
-        setTimeout(() => initiateVNPay(), 400);
+        setTimeout(() => handleCheckout(), 400);
+    };
+
+    const handleCheckoutSubmit = (e) => {
+        e.preventDefault();
+        if (!checkoutData.fullName || !checkoutData.phone || !checkoutData.address) {
+            toast.error('Vui lòng điền đầy đủ thông tin giao hàng!');
+            return;
+        }
+        setShowCheckoutForm(false);
+        initiateVNPay(checkoutData);
     };
 
     if (cartItems.length === 0) {
@@ -218,6 +239,54 @@ const CartPage = () => {
                     onClose={() => setShowAuthModal(false)}
                     onSuccess={handleAuthSuccess}
                 />
+            )}
+
+            {showCheckoutForm && (
+                <div className="auth-modal-overlay" onClick={(e) => e.target === e.currentTarget && setShowCheckoutForm(false)}>
+                    <div className="auth-modal auth-modal-wrap">
+                        <button className="auth-close-btn" onClick={() => setShowCheckoutForm(false)}>✕</button>
+                        <div className="auth-modal-title">Thông tin giao hàng</div>
+                        <div className="auth-modal-sub">Vui lòng điền thông tin để chúng tôi giao hàng đến bạn</div>
+                        
+                        <form onSubmit={handleCheckoutSubmit}>
+                            <div className="auth-field">
+                                <label>Họ và tên người nhận</label>
+                                <input
+                                    type="text"
+                                    required
+                                    value={checkoutData.fullName}
+                                    onChange={(e) => setCheckoutData({...checkoutData, fullName: e.target.value})}
+                                    placeholder="Nhập họ và tên"
+                                />
+                            </div>
+                            <div className="auth-field">
+                                <label>Số điện thoại</label>
+                                <input
+                                    type="tel"
+                                    required
+                                    value={checkoutData.phone}
+                                    onChange={(e) => setCheckoutData({...checkoutData, phone: e.target.value})}
+                                    placeholder="Nhập số điện thoại liên hệ"
+                                />
+                            </div>
+                            <div className="auth-field">
+                                <label>Địa chỉ nhận hàng</label>
+                                <textarea
+                                    required
+                                    rows="3"
+                                    value={checkoutData.address}
+                                    onChange={(e) => setCheckoutData({...checkoutData, address: e.target.value})}
+                                    placeholder="Nhập địa chỉ giao hàng chi tiết"
+                                    style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                />
+                            </div>
+                            
+                            <button type="submit" className="auth-submit-btn" disabled={loading}>
+                                {loading ? '⏳ Đang kết nối VNPay...' : '💳 Xác nhận & Thanh toán'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
             )}
         </>
     );

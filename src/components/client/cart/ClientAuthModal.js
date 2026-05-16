@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './CartPage.css';
 
-const ClientAuthModal = ({ onClose, onSuccess }) => {
+const ClientAuthModal = ({ onClose, onSuccess, isForced = false }) => {
     const [tab, setTab] = useState('login'); // 'login' | 'register'
-    const [form, setForm] = useState({ username: '', password: '', fullName: '' });
+    const [form, setForm] = useState({ username: '', password: '', confirmPassword: '', fullName: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -42,12 +42,16 @@ const ClientAuthModal = ({ onClose, onSuccess }) => {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        if (!form.username || !form.password) {
+        if (!form.username || !form.password || !form.confirmPassword) {
             setError('Vui lòng nhập đầy đủ thông tin');
             return;
         }
         if (form.password.length < 6) {
             setError('Mật khẩu phải có ít nhất 6 ký tự');
+            return;
+        }
+        if (form.password !== form.confirmPassword) {
+            setError('Mật khẩu xác nhận không khớp');
             return;
         }
         setLoading(true);
@@ -78,9 +82,9 @@ const ClientAuthModal = ({ onClose, onSuccess }) => {
     };
 
     return (
-        <div className="auth-modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+        <div className="auth-modal-overlay" onClick={(e) => !isForced && e.target === e.currentTarget && onClose()}>
             <div className="auth-modal auth-modal-wrap">
-                <button className="auth-close-btn" onClick={onClose}>✕</button>
+                {!isForced && <button className="auth-close-btn" onClick={onClose}>✕</button>}
                 <div className="auth-modal-logo">☕</div>
                 <div className="auth-modal-title">Hương Coffee</div>
                 <div className="auth-modal-sub">
@@ -161,6 +165,16 @@ const ClientAuthModal = ({ onClose, onSuccess }) => {
                                 value={form.password}
                                 onChange={handleChange}
                                 placeholder="Tối thiểu 6 ký tự"
+                            />
+                        </div>
+                        <div className="auth-field">
+                            <label>Xác nhận mật khẩu</label>
+                            <input
+                                name="confirmPassword"
+                                type="password"
+                                value={form.confirmPassword}
+                                onChange={handleChange}
+                                placeholder="Nhập lại mật khẩu"
                             />
                         </div>
                         <button type="submit" className="auth-submit-btn" disabled={loading}>
