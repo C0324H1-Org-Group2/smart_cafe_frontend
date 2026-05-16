@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getAllOrders, getOrderDetails } from "../service/OrderService";
 import OrderDetailModal from "./OrderDetailModal";
 import './ManagerOrder.css';
@@ -18,8 +19,10 @@ function OrderList() {
     const [showModal, setShowModal] = useState(false);
     const [selectedOrderId, setSelectedOrderId] = useState(null);
     const [orderDetails, setOrderDetails] = useState([]);
-    const [isAscending, setIsAscending] = useState(true); // Trạng thái sắp xếp
+    const [isAscending, setIsAscending] = useState(true);
     const [userRole, setUserRole] = useState('ROLE_EMPLOYEE');
+    const location = useLocation();
+    const navigate = useNavigate();
 
     // Cập nhật searchParams khi codeSearch hoặc dateSearch thay đổi
     useEffect(() => {
@@ -91,6 +94,15 @@ function OrderList() {
         setSelectedOrderId(null);
         setOrderDetails([]);
     };
+
+    // Auto open modal if navigated from notification
+    useEffect(() => {
+        if (location.state && location.state.openOrderCode) {
+            handleShowModal(location.state.openOrderCode);
+            // Clear the state so it doesn't keep opening if user refreshes
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location.state, navigate]);
 
     return (
         <>

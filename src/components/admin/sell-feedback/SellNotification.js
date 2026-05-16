@@ -124,7 +124,8 @@ const SellNotification = ({onSellNotifications, isDropdownOpen, closeDropdown}) 
                 <Link
                     className="dropdown-item"
                     key={msg.tableId}
-                    to={msg.isOnline || msg.tableId === -1 ? `/admin/order-list` : `/admin/sell`}
+                    to={msg.isOnline || msg.tableId === -1 ? `/admin/order` : `/admin/sell`}
+                    state={{ openOrderCode: msg.code }}
                     onClick={() => handleNotificationClick(msg.tableId, 'order')}
                     style={{whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}
                 >
