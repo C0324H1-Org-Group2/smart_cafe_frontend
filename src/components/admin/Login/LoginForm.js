@@ -19,11 +19,13 @@ const LoginForm = () => {
             await login(values); // Đăng nhập người dùng
 
             if (hasRole('ROLE_ADMIN')) {
-                window.location.href = '/admin/home'; // Đường dẫn cho admin
+                window.location.href = '/admin/users'; // Đường dẫn cho admin
+            } else if (hasRole('ROLE_MANAGER')) {
+                window.location.href = '/admin/home'; // Đường dẫn cho manager
             } else if (hasRole('ROLE_EMPLOYEE')) {
                 window.location.href = '/admin/sell'; // Đường dẫn cho employee
             } else {
-                toast.error('Vai trò không hợp lệ.');
+                toast.error('Vai trò không hợp lệ. Vui lòng kiểm tra lại quyền trong Database.');
             }
 
             toast.success('Đăng nhập thành công!');
