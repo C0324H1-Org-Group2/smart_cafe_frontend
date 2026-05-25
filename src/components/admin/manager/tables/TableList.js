@@ -133,7 +133,7 @@ function TableList() {
                 <div className="section-body">
                     <h2 className="section-title">Table List</h2>
                     <div className="card-header">
-                        {userRole === 'ROLE_ADMIN' && (
+                        {(userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MANAGER' || userRole === 'ROLE_EMPLOYEE') && (
                             <Link to="/admin/tables/create" className="btn btn-success">
                                 <i className="fas fa-plus"></i> Create Table
                             </Link>
@@ -162,7 +162,7 @@ function TableList() {
                                 </select>
                             </div>
                             <div className="col-md-4 d-flex align-items-end">
-                                {userRole === 'ROLE_ADMIN' && (
+                                {(userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MANAGER') && (
                                     <button
                                         className="btn btn-success"
                                         onClick={() => setIncludeDeleted(!includeDeleted)}
@@ -190,7 +190,7 @@ function TableList() {
                                     </th>
                                     <th className="table-header">State</th>
                                     <th className="table-header">Status</th>
-                                    {userRole === 'ROLE_ADMIN' && (
+                                    {(userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MANAGER') && (
                                         <th className="table-header">Is Deleted</th>
                                     )}
                                     <th className="table-header">Action</th>
@@ -204,7 +204,7 @@ function TableList() {
                                             <td>{table.code}</td>
                                             <td>{table.state}</td>
                                             <td>{table.on ? 'On' : 'Off'}</td>
-                                            {userRole === 'ROLE_ADMIN' && (
+                                            {(userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MANAGER') && (
                                                 <td>{table.delete ? 'Yes' : 'No'}</td>
                                             )}
                                             <td>
@@ -237,7 +237,7 @@ function TableList() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={userRole === 'ROLE_ADMIN' ? '6' : '5'} className="text-center">
+                                        <td colSpan={(userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MANAGER') ? '6' : '5'} className="text-center">
                                             No Tables Found
                                         </td>
                                     </tr>

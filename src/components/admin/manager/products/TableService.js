@@ -130,7 +130,7 @@ const TableService = () => {
                     <div className="card-body">
                         <div className="d-flex justify-content-between mb-3">
                             <div className="d-flex align-items-center">
-                                {userRole === 'ROLE_ADMIN' && (
+                                {(userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MANAGER' || userRole === 'ROLE_EMPLOYEE') && (
                                     <button className="btn btn-success" onClick={handleCreateClick}>
                                         <i className="fas fa-plus"></i> Create
                                     </button>
@@ -194,7 +194,7 @@ const TableService = () => {
                                                         <i className="fas fa-trash"></i>
                                                     </button>
                                                 )}
-                                                {service.isDelete === 'DELETED' && userRole === 'ROLE_ADMIN' && (
+                                                {service.isDelete === 'DELETED' && (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MANAGER') && (
                                                     <button
                                                         className="btn btn-info ml-1"
                                                         onClick={() => handleShowRestoreModal(service)}

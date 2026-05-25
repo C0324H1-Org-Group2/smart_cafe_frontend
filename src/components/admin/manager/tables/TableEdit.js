@@ -18,11 +18,13 @@ const TableEdit = () => {
     const [initialValues, setInitialValues] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [formValues, setFormValues] = useState(null);
+    const [tableData, setTableData] = useState(null);
 
     useEffect(() => {
         const fetchTable = async () => {
             try {
                 const data = await getTableById(tableId);
+                setTableData(data);
                 setInitialValues({
                     state: data.state, // Only set initial value for state
                 });
@@ -45,7 +47,11 @@ const TableEdit = () => {
         setShowModal(false);
 
         try {
-            await updateTable(tableId, formValues);
+            const updatedTablePayload = {
+                ...tableData,
+                state: formValues.state
+            };
+            await updateTable(tableId, updatedTablePayload);
             toast.success('Table updated successfully!');
             navigate('/admin/tables/list'); // Navigate to the table list page
         } catch (error) {

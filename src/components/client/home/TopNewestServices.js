@@ -60,7 +60,7 @@ const TopNewestServices = () => {
                         currentItems.map((item) => (
                             <div key={item.serviceId} className="col-md-3">
                                 <div className="menu-entry">
-                                    <a href="#" className="img" style={{ backgroundImage: `url(/images/${item.imageUrl})` }}></a>
+                                    <a href="#" className="img" style={{ backgroundImage: `url(${item.imageUrl && item.imageUrl.startsWith('http') ? item.imageUrl : `/images/${item.imageUrl}`})` }}></a>
                                     <div className="text text-center pt-4">
                                         <h3><a href="#">{item.serviceName}</a></h3>
                                         <p className="price"><span>{item.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span></p>

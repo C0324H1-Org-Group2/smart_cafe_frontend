@@ -22,7 +22,7 @@ const NewsListManagement = () => {
     const loadNews = async (page) => {
         try {
             let data;
-            if (userRole === 'ROLE_ADMIN') {
+            if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MANAGER') {
                 data = await newsService.getAllNews(page, pageSize);
             } else if (userRole === 'ROLE_EMPLOYEE') {
                 data = await newsService.getAllActiveNews(page, pageSize);
@@ -41,6 +41,8 @@ const NewsListManagement = () => {
                 const roles = authorities.map(auth => auth.authority);
                 if (roles.includes('ROLE_ADMIN')) {
                     setUserRole('ROLE_ADMIN');
+                } else if (roles.includes('ROLE_MANAGER')) {
+                    setUserRole('ROLE_MANAGER');
                 } else if (roles.includes('ROLE_EMPLOYEE')) {
                     setUserRole('ROLE_EMPLOYEE');
                 }
@@ -118,7 +120,7 @@ const NewsListManagement = () => {
                     <h2 className="section-title">News Management</h2>
                     <p className="section-lead">Manage the news articles on the site.</p>
                     <div className="card-header d-flex justify-content-between align-items-center">
-                        {userRole === 'ROLE_ADMIN' && (
+                        {(userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MANAGER' || userRole === 'ROLE_EMPLOYEE') && (
                             <Link to="/admin/news/create" className="btn btn-success">
                                 <i className="fas fa-plus"></i> Add News
                             </Link>
@@ -159,7 +161,7 @@ const NewsListManagement = () => {
                                             <Link to={`/news/${news.newsId}`} className="btn btn-secondary" title="Detail">
                                                 <i className="fas fa-info-circle"></i>
                                             </Link>
-                                            {userRole === 'ROLE_ADMIN' && (
+                                            {(userRole === 'ROLE_ADMIN' || userRole === 'ROLE_MANAGER') && (
                                                 <>
                                                     <Link to={`/admin/news/update/${news.newsId}`} className="btn btn-primary ml-2" title="Edit">
                                                         <i className="fas fa-edit"></i>
@@ -180,6 +182,7 @@ const NewsListManagement = () => {
                                                     )}
                                                 </>
                                             )}
+
                                             {userRole === 'ROLE_EMPLOYEE' && news.status === 'Active' && (
                                                 <button className="btn btn-warning ml-2" onClick={() => handleDeleteClick(news, false)}>
                                                     <i className="fas fa-eraser"></i> Xóa mềm

@@ -13,7 +13,7 @@ const ServiceDetailModal = ({ show, handleClose, serviceDetails }) => {
     {serviceDetails ? (
         <>
             <div style={{display: 'flex', justifyContent: 'center'}}>
-                <img src={`/images/${serviceDetails.imageUrl}`} alt={serviceDetails.serviceName} style={{width: '50%', height: 'auto'}}/>
+                <img src={serviceDetails.imageUrl && serviceDetails.imageUrl.startsWith('http') ? serviceDetails.imageUrl : `/images/${serviceDetails.imageUrl}`} alt={serviceDetails.serviceName} style={{width: '50%', height: 'auto'}}/>
             </div>
             <table className="table table-striped" style={{marginTop: '20px'}}>
                 <tbody>
